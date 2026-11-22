@@ -2,11 +2,12 @@
 
 The aim of this repository is to build docker images with fresh set of **nginx + certbot + php-fpm and OpenSSL 3.5** (with support of X25519MLKEM768 required for iOS)
 
-**Four variants provided:**
+**Five variants provided:**
 - nginx 1.24 + php 7.4 compiled
 - nginx 1.24 + php 7.4 + Wordpress/Drupal support compiled (`cms` in the folder name)
-- nginx 1.30 + php 8.3.37 from packages
-- nginx 1.30 + php 8.3.36 Wordpress/Drupal support from packages
+- nginx 1.24 + php 7.4 + Wordpress/Drupal support Debian packages (`cms` in the folder name)
+- nginx 1.30 + php 8.3.37 from Alpine packages
+- nginx 1.30 + php 8.3.37 Wordpress/Drupal support from Alpine packages (`cms` in the folder name)
 
 Provided images fix the following known vulnerabilities:
 - **nginx2root**: HTTP/2 (CVE-2026-123633, CVE-2026-123007), CVE-2026-123634 in resolver - only in nginx 1.28 / 1.30
@@ -24,10 +25,11 @@ Provided images fix the following known vulnerabilities:
 
 | Папка / Репозиторий | Базовая ОС | Nginx | OpenSSL (TLS) | PHP | Назначение |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`YOUR_DOCKERHUB_USER/nginx-php7.4-certbot`** | Alpine 3.22/3.24 | `1.24.0` | `3.5.x` | `7.4.33` (с патчами CVE) | Легковесный образ для legacy-проектов (~230 МБ) |
-| **`YOUR_DOCKERHUB_USER/nginx-php7.4-certbot-cms`** | Alpine 3.22/3.24 | `1.24.0` | `3.5.x` | `7.4.33` (с патчами CVE) | Полный набор модулей для WordPress и Drupal (~280 МБ) |
-| **`YOUR_DOCKERHUB_USER/nginx-php7=8.3-certbot`** | Alpine 3.24 | `1.30.x` | `3.5.x` | `8.3` | Легковесный образ для современных проектов (~170 МБ) |
-| **`YOUR_DOCKERHUB_USER/nginx-php7=8.3-certbot-cms`** | Alpine 3.24 | `1.30.x` | `3.5.x` | `8.3` | Полный набор модулей для WordPress и Drupal (~255 МБ) |
+| **`alexishw/nginx-php7.4-certbot`** | Alpine 3.22/3.24 | `1.24.0` | `3.5.x` | `7.4.33` (с патчами CVE) | Легковесный образ для legacy-проектов (~52 МБ) |
+| **`alexishw/nginx-php7.4-certbot-cms`** | Alpine 3.22/3.24 | `1.24.0` | `3.5.x` | `7.4.33` (с патчами CVE) | Полный набор модулей для WordPress и Drupal (~61 МБ) |
+| **`alexishw/nginx-php7.4-certbot-cms-debian`** | debian:trixie-slim | `1.24.0` | `3.5.x` | `7.4.33` (с патчами CVE) | Полный набор модулей для WordPress и Drupal (~224 МБ) |
+| **`alexishw/nginx-php8.3-certbot`** | Alpine 3.24 | `1.30.x` | `3.5.x` | `8.3` | Легковесный образ для современных проектов (~40 МБ) |
+| **`alexishw/nginx-php8.3-certbot-cms`** | Alpine 3.24 | `1.30.x` | `3.5.x` | `8.3` | Полный набор модулей для WordPress и Drupal (~60 МБ) |
 
 ### Особенности и безопасность сборок
 * **Современный TLS (OpenSSL 3.5):** во всех 4 образах Nginx слинкован с системным OpenSSL 3.5 (поддержка TLS 1.2 / TLS 1.3 и современных криптоалгоритмов).
@@ -55,7 +57,7 @@ docker run -d \
   -p 80:80 \
   -v $(pwd)/src:/var/www/html \
   --restart unless-stopped \
-  YOUR_DOCKERHUB_USER/nginx-php7=8.3-certbot-cms:latest
+  alexishw/nginx-php8.3-certbot-cms:latest
 ```
 
 ### 2. Запуск с автоматическим выпуском SSL-сертификата
@@ -72,10 +74,10 @@ docker run -d \
   -v $(pwd)/letsencrypt:/etc/letsencrypt \
   -v $(pwd)/nginx-conf:/etc/nginx/http.d \
   --restart unless-stopped \
-  YOUR_DOCKERHUB_USER/nginx-php7=8.3-certbot-cms:latest
+  alexishw/nginx-php8.3-certbot-cms:latest
 ```
 > **Примечание по путям конфигов Nginx:**
-> * Для образов **`nginx-php7=8.3-certbot` и `nginx-php7=8.3-certbot-cms`** виртуальные хосты лежат в `/etc/nginx/http.d` (`-v $(pwd)/nginx-conf:/etc/nginx/http.d`).
+> * Для образов **`nginx-php8.3-certbot` и `nginx-php8.3-certbot-cms`** виртуальные хосты лежат в `/etc/nginx/http.d` (`-v $(pwd)/nginx-conf:/etc/nginx/http.d`).
 > * Для образов **`nginx-php7.4-certbot` и `nginx-php7.4-certbot-cms`** виртуальные хосты лежат в `/etc/nginx/conf.d` (`-v $(pwd)/nginx-conf:/etc/nginx/conf.d`).
 
 ### 3. Запуск через `docker-compose.yml` (с базой данных MariaDB)
@@ -83,7 +85,7 @@ docker run -d \
 ```yaml
 services:
   web:
-    image: YOUR_DOCKERHUB_USER/nginx-php7=8.3-certbot-cms:latest
+    image: alexishw/nginx-php8.3-certbot-cms:latest
     container_name: cms-web
     ports:
       - "80:80"
