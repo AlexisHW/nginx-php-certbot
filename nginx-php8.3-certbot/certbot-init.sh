@@ -9,6 +9,8 @@ if [ "$DOMAIN" = "_" ] || [ -z "$DOMAIN" ] || [ -z "$EMAIL" ]; then
     echo "[certbot-init] DOMAIN или EMAIL не заданы, автоматический выпуск SSL пропущен."
     exit 0
 fi
+# Если скрипт вызван напрямую, и домен не указан - заменяем
+sed -i 's/server_name _;/server_name $DOMAIN;/g' /etc/nginx/http.d/default.conf
 
 # Берем первый домен из списка (имя директории сертификата в Let's Encrypt)
 FIRST_DOMAIN=$(echo "$DOMAIN" | awk '{print $1}')

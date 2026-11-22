@@ -1,5 +1,16 @@
 # Docker images Nginx + OpenSSL 3.5 + PHP (7.4 / 8.3) + Certbot
 
+[![Build Status](https://github.com)](https://github.com)
+[![GitHub Stars](https://shields.io)](https://github.com)
+
+| Image | Version | Size | Pulls |
+| :--- | :--- | :--- | :--- |
+| **nginx-php8.3-certbot-cms** | ![Version](https://shields.io) | ![Size](https://shields.io) | ![Pulls](https://shields.io) |
+| **nginx-php8.3-certbot** | ![Version](https://shields.io) | ![Size](https://shields.io) | ![Pulls](https://shields.io) |
+| **nginx-php7.4-certbot-cms** | ![Version](https://shields.io) | ![Size](https://shields.io) | ![Pulls](https://shields.io) |
+| **nginx-php7.4-certbot** | ![Version](https://shields.io) | ![Size](https://shields.io) | ![Pulls](https://shields.io) |
+| **nginx-php7.4-certbot-cms-debian** | ![Version](https://shields.io) | ![Size](https://shields.io) | ![Pulls](https://shields.io) |
+
 The aim of this repository is to build docker images with fresh set of **nginx + certbot + php-fpm and OpenSSL 3.5** (with support of X25519MLKEM768 required for iOS)
 
 **Five variants provided:**
