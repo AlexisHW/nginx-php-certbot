@@ -1,0 +1,52 @@
+server {
+    listen 80;
+    server_name ${DOMAIN};
+    root /var/www/html;
+    index index.php index.html;
+
+    # Запрет доступа к скрытым и системным файлам CMS
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    location ~* /(?:uploads|files)/.*\.php$ {
+        deny all;
+    }
+
+    location ~* \.(engine|inc|install|make|module|profile|po|sh|.*sql|theme|twig|tpl(\.php)?|xtmpl|yml)(~|\.sw[op]|\.bak|\.orig|\.save)?$ {
+        deny all;
+    }
+
+    # Генерация производных изображений в Drupal (Image Styles)
+    location ~ ^/sites/.*/files/styles/ {
+        try_files $uri @rewrite;
+    }
+
+    # Роутинг ЧПУ для WordPress и Drupal
+    location / {
+        try_files $uri $uri/ @rewrite;
+    }
+
+    location @rewrite {
+        rewrite ^ /index.php?$query_string last;
+    }
+
+    # Передача PHP-скриптов в PHP-FPM 8.3
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_read_timeout 300;
+    }
+
+    # Кэширование статики
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {
+        expires max;
+        log_not_found off;
+        access_log off;
+        try_files $uri @rewrite;
+    }
+}
