@@ -29,22 +29,26 @@ jobs:
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            php74:
-              - 'php74/**'
-              - '!php74/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
-              - '!php74/VERSION'
-            php74-cms:
-              - 'php74-cms/**'
-              - '!php74-cms/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
-              - '!php74-cms/VERSION'
-            php83:
-              - 'php83/**'
-              - '!php83/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
-              - '!php83/VERSION'
-            php83-cms:
-              - 'php83-cms/**'
-              - '!php83-cms/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
-              - '!php83-cms/VERSION'
+            nginx-php7.4-certbot:
+              - 'nginx-php7.4-certbot/**'
+              - '!nginx-php7.4-certbot/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
+              - '!nginx-php7.4-certbot/VERSION'
+            nginx-php7.4-certbot-cms:
+              - 'nginx-php7.4-certbot-cms/**'
+              - '!nginx-php7.4-certbot-cms/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
+              - '!nginx-php7.4-certbot-cms/VERSION'
+            nginx-php7.4-certbot-cms-debian:
+              - 'nginx-php7.4-certbot-cms-debian/**'
+              - '!nginx-php7.4-certbot-cms-debian/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
+              - '!nginx-php7.4-certbot-cms-debian/VERSION'
+            nginx-php8.3-certbot:
+              - 'nginx-php8.3-certbot/**'
+              - '!nginx-php8.3-certbot/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
+              - '!nginx-php8.3-certbot/VERSION'
+            nginx-php8.3-certbot-cms:
+              - 'nginx-php8.3-certbot-cms/**'
+              - '!nginx-php8.3-certbot-cms/**/[Rr][Ee][Aa][Dd][Mm][Ee].md'
+              - '!nginx-php8.3-certbot-cms/VERSION'
 
   # Шаг 2. Собираем образ с именем папки и текущей версией из файла VERSION
   build:
@@ -55,7 +59,7 @@ jobs:
       fail-fast: false
       max-parallel: 1 # Последовательная сборка предотвращает конфликты при авто-коммите файла VERSION
       matrix:
-        folder: ${{ github.event_name == 'workflow_dispatch' && fromJSON('["php74","php74-cms","php83","php83-cms"]') || fromJSON(needs.changes.outputs.matrix) }}
+        folder: ${{ github.event_name == 'workflow_dispatch' && fromJSON('["nginx-php7.4-certbot","nginx-php7.4-certbot-cms","nginx-php7.4-certbot-cms-debian","nginx-php8.3-certbot","nginx-php8.3-certbot-cms"]') || fromJSON(needs.changes.outputs.matrix) }}
 
     steps:
       - name: Checkout repository
